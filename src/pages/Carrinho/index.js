@@ -4,7 +4,7 @@ import { useCarrinhoContext } from 'common/context/Carrinho';
 import { usePagamentoContext } from 'common/context/Pagamento';
 import { UsuarioContext } from 'common/context/Usuario';
 import Produto from 'components/Produto';
-import { useContext, useState } from 'react';
+import { useContext, useMemo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Container, Voltar, TotalContainer, PagamentoContainer} from './styles';
 
@@ -14,7 +14,7 @@ function Carrinho() {
   const { saldo = 0 } = useContext(UsuarioContext);
   const { tiposPagamento, formaPagamento, mudarFormaPagamento } = usePagamentoContext();
   const history = useHistory();
-  const total = saldo - valorTotalCarrinho;
+  const total = useMemo(() => saldo - valorTotalCarrinho, [saldo, valorTotalCarrinho]);
 
   console.log(saldo);
 
