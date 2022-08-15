@@ -2,16 +2,22 @@ import { Button, Snackbar, InputLabel, Select, MenuItem } from '@material-ui/cor
 import MuiAlert from '@material-ui/lab/Alert';
 import { useCarrinhoContext } from 'common/context/Carrinho';
 import { usePagamentoContext } from 'common/context/Pagamento';
+import { UsuarioContext } from 'common/context/Usuario';
 import Produto from 'components/Produto';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Container, Voltar, TotalContainer, PagamentoContainer} from './styles';
 
 function Carrinho() {
   const [openSnackbar, setOpenSnackbar] = useState(false);
   const { carrinho, valorTotalCarrinho } = useCarrinhoContext();
+  const { saldo = 0 } = useContext(UsuarioContext);
   const { tiposPagamento, formaPagamento, mudarFormaPagamento } = usePagamentoContext();
   const history = useHistory();
+  const total = saldo - valorTotalCarrinho;
+
+  console.log(saldo);
+
   return (
     <Container>
       <Voltar onClick={() => history.goBack()} />
@@ -38,11 +44,11 @@ function Carrinho() {
           </div>
           <div>
             <h2> Saldo: </h2>
-            <span> R$ </span>
+            <span> R$ {Number(saldo).toFixed(2)}</span>
           </div>
           <div>
             <h2> Saldo Total: </h2>
-            <span> R$ </span>
+            <span> R$ {total.toFixed(2)}</span>
           </div>
         </TotalContainer>
       <Button
@@ -51,6 +57,7 @@ function Carrinho() {
         }}
         color="primary"
         variant="contained"
+        disabled={total < 0}
       >
          Comprar
        </Button>
